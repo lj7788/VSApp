@@ -1,0 +1,25 @@
+<template id="menu">
+<div style="padding:10px 10px;" class="menu">
+    <router-link to="/" class="yd-btn yd-btn-primary home">Home</router-link>
+    <router-link to="page1" class="yd-btn yd-btn-primary">Page1</router-link>
+    <router-link to="page2" class="yd-btn yd-btn-danger">Page2</router-link>        
+</div>
+</template>
+<template id="index">
+    <yd-layout title="Index" id="nav">
+        <main-menu></main-menu>
+    </yd-layout>
+</template>
+<style type="text/css">
+#nav .yd-navbar-item{display:none;}
+#nav .home{display:none;}
+.menu a{line-height:30px;}
+</style>
+<script>
+Vue.component("MainMenu",{
+    template:"#menu"
+});
+var Index=Vue.extend({
+    template:"#index"
+});
+</script>

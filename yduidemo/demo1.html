@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Demo</title>
+    <link rel="stylesheet" href="lib/ydui.px.css">
+    <script src="lib/ydui.flexible.js"></script>
+    <script src="lib/zepto.min.js"></script>
+    <style type="text/css">
+        #nav a.yd-btn{line-height: 30px;}
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    <script src="lib/vue.min.js"></script>
+    <script src="lib/ydui.js"></script>
+    <script src="lib/vue-router.min.js"></script>    
+    <myPage html="pages/index.html" ></myPage>
+    <myPage html="pages/page1.html" ></myPage>
+    <myPage html="pages/page2.html" ></myPage>   
+    <script>       
+        function loadMyPage(){
+            var pages=$("myPage");
+            for(var i=0;i<pages.length;i++){
+                var page=pages[i];
+                var html=$(page).attr("html");
+                var js=$(page).attr("js");
+                var code="";
+                if(html){
+                    code=$.ajax({url:html+"?x="+ +new Date(),async:false}).responseText;
+                    if(code.indexOf("<script>")>0){
+                        var st=code.toLowerCase().indexOf("<script>");
+                        var ed=code.toLowerCase().lastIndexOf("script>");
+                        var sc=code.substring(st+8,ed-2);                        
+                        code=code.substring(0,st);
+                        page.outerHTML=code;
+                        eval(sc);
+                    }
+
+                }else{
+                    page.outerHTML=code;
+                }
+                if(js){
+                    code=$.ajax({url:js,async:false}).responseText;
+                    eval(code);
+                }
+            }
+
+            var  router = new VueRouter({
+            routes: [
+                    {path: '/', name: 'index', component: Index}
+                    ,{path: '/page1', name: 'page1', component: Page1}
+                    ,{path: '/page2', name: 'page2', component: Page2}
+           ]});
+
+           var app = new Vue({
+                router: router,
+                render: function(v){
+                    return v(Vue.extend({
+                            template:"<div><router-view></router-view></div>"
+                    }));
+                }
+            }).$mount('#app');
+        }
+        $(function(){
+            loadMyPage();
+        });
+
+    </script>
+</body>
+</html>
